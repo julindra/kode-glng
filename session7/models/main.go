@@ -1,6 +1,7 @@
 package models
 
 import (
+	"log"
 	"os"
 
 	"gorm.io/driver/mysql"
@@ -9,7 +10,7 @@ import (
 
 var db *gorm.DB
 
-func DBInit() {
+func InitDB() {
 	var (
 		user   = os.Getenv("DB_USER")
 		pass   = os.Getenv("DB_PASS")
@@ -17,7 +18,11 @@ func DBInit() {
 		dbname = os.Getenv("DB_NAME")
 	)
 	dsn := user + ":" + pass + "@tcp(" + host + ")/" + dbname + "?charset=utf8mb4&parseTime=True&loc=Local"
-	db, _ = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	var err error
+	if db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{}); err != nil {
+		log.Fatal("Error conneting to database")
+	}
 
 	db.AutoMigrate(&Order{}, &Item{})
 }
