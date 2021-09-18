@@ -15,10 +15,13 @@ func main() {
 
 	r.Use(middlewares.Error())
 
-	r.GET("/orders", controllers.Read())
-	r.POST("/orders", middlewares.Parser(), controllers.Create())
-	r.PUT("/orders", middlewares.Parser(), controllers.Update())
-	r.DELETE("/orders/:id", controllers.Delete())
+	orders := r.Group("/orders")
+	{
+		orders.GET("/", controllers.Read)
+		orders.POST("/", middlewares.Parser, controllers.Create)
+		orders.PUT("/", middlewares.Parser, controllers.Update)
+		orders.DELETE("/:id", controllers.Delete)
+	}
 
 	r.Run()
 }
