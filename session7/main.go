@@ -1,7 +1,11 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 
 	"session7/controllers"
 	"session7/middlewares"
@@ -9,6 +13,10 @@ import (
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	models.DBInit()
 
 	r := gin.Default()
@@ -23,5 +31,6 @@ func main() {
 		orders.DELETE("/:id", controllers.Delete)
 	}
 
-	r.Run()
+	port := os.Getenv("PORT")
+	r.Run(":" + port)
 }
