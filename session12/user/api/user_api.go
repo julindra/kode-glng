@@ -32,6 +32,14 @@ func (u UserApi) Validate(user models.User) error {
 	return validate.Struct(user)
 }
 
+// @Summary Create a User
+// @Accept json
+// @Produce json
+// @Param json body models.User true "User"
+// @Success 201 {object} models.User
+// @Failure 400 {object} models.Error
+// @Failure 500 {object} models.Error
+// @Router /users [post]
 func (u UserApi) Create(c *gin.Context) {
 	jsonData, _ := ioutil.ReadAll(c.Request.Body)
 	var user models.User
@@ -49,6 +57,12 @@ func (u UserApi) Create(c *gin.Context) {
 	}
 }
 
+// @Summary Get all Users
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.User
+// @Failure 500 {object} models.Error
+// @Router /users [get]
 func (u UserApi) Read(c *gin.Context) {
 	users, err := u.controller.Read()
 	if err != nil {
@@ -58,6 +72,16 @@ func (u UserApi) Read(c *gin.Context) {
 	}
 }
 
+// @Summary Update a User
+// @Accept json
+// @Produce json
+// @Param json body models.User true "User"
+// @Param id path int true "User ID"
+// @Success 200 {object} models.User
+// @Failure 400 {object} models.Error
+// @Failure 404 {object} models.Error
+// @Failure 500 {object} models.Error
+// @Router /users/:id [put]
 func (u UserApi) Update(c *gin.Context) {
 	jsonData, _ := ioutil.ReadAll(c.Request.Body)
 	var user models.User
@@ -83,6 +107,15 @@ func (u UserApi) Update(c *gin.Context) {
 	}
 }
 
+// @Summary Delete a User
+// @Accept json
+// @Produce json
+// @Param id path int true "User ID"
+// @Success 200 {object} object{Message=string}
+// @Failure 400 {object} models.Error
+// @Failure 404 {object} models.Error
+// @Failure 500 {object} models.Error
+// @Router /users/:id [delete]
 func (u UserApi) Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

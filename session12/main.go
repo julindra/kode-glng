@@ -17,7 +17,23 @@ import (
 	UserStorage "session12/user/storage"
 
 	StatusStorage "session12/status/storage"
+
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	docs "session12/docs"
 )
+
+// @title Todo Application
+// @version 1.0
+// @description Simple Todo REST API
+
+// @contact.name Renhard Julindra
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:8080
+// @BasePath /api/v1
 
 func main() {
 	if err := godotenv.Load(); err != nil {
@@ -35,11 +51,14 @@ func main() {
 	todoController := &TodoController.Controller{Storage: todoStorage, StatusStorage: statusStorage}
 	userController := &UserController.Controller{Storage: userStorage}
 
+	docs.SwaggerInfo.BasePath = "/api/v1"
 	api := r.Group("/api/v1")
 	{
 		TodoApi.Router(api, todoController)
 		UserApi.Router(api, userController)
 	}
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	port := os.Getenv("PORT")
 	r.Run(":" + port)

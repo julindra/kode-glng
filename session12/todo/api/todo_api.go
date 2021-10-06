@@ -33,6 +33,14 @@ func (t TodoApi) Validate(todo models.Todo) error {
 	return validate.StructExcept(todo, "UserData")
 }
 
+// @Summary Create a Todo
+// @Accept json
+// @Produce json
+// @Param json body models.Todo true "Todo"
+// @Success 201 {object} models.Todo
+// @Failure 400 {object} models.Error
+// @Failure 500 {object} models.Error
+// @Router /todos [post]
 func (t TodoApi) Create(c *gin.Context) {
 	jsonData, _ := ioutil.ReadAll(c.Request.Body)
 	var todo models.Todo
@@ -50,6 +58,12 @@ func (t TodoApi) Create(c *gin.Context) {
 	}
 }
 
+// @Summary Get all Todos
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.Todo
+// @Failure 500 {object} models.Error
+// @Router /todos [get]
 func (t TodoApi) Read(c *gin.Context) {
 	todos, err := t.controller.Read()
 	if err != nil {
@@ -59,6 +73,15 @@ func (t TodoApi) Read(c *gin.Context) {
 	}
 }
 
+// @Summary Get a Todo
+// @Accept json
+// @Produce json
+// @Param id path int true "Todo ID"
+// @Success 200 {object} models.Todo
+// @Failure 400 {object} models.Error
+// @Failure 404 {object} models.Error
+// @Failure 500 {object} models.Error
+// @Router /todos/:id [get]
 func (t TodoApi) ReadOne(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -77,6 +100,16 @@ func (t TodoApi) ReadOne(c *gin.Context) {
 	}
 }
 
+// @Summary Update a Todo
+// @Accept json
+// @Produce json
+// @Param json body models.Todo true "Todo"
+// @Param id path int true "Todo ID"
+// @Success 200 {object} models.Todo
+// @Failure 400 {object} models.Error
+// @Failure 404 {object} models.Error
+// @Failure 500 {object} models.Error
+// @Router /todos/:id [put]
 func (t TodoApi) Update(c *gin.Context) {
 	jsonData, _ := ioutil.ReadAll(c.Request.Body)
 	var todo models.Todo
@@ -102,6 +135,15 @@ func (t TodoApi) Update(c *gin.Context) {
 	}
 }
 
+// @Summary Delete a Todo
+// @Accept json
+// @Produce json
+// @Param id path int true "Todo ID"
+// @Success 200 {object} object{Message=string}
+// @Failure 400 {object} models.Error
+// @Failure 404 {object} models.Error
+// @Failure 500 {object} models.Error
+// @Router /todos/:id [delete]
 func (t TodoApi) Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
