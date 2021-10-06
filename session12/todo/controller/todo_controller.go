@@ -1,6 +1,10 @@
 package controller
 
-import "session12/models"
+import (
+	"errors"
+
+	"session12/models"
+)
 
 type Controller struct {
 	Storage       models.TodoStorage
@@ -26,9 +30,13 @@ func (c Controller) ReadOne(id int) (models.Todo, error) {
 }
 
 func (c Controller) Update(id int, todo models.Todo) error {
-	if _, err := c.ReadOne(id); err != nil {
+	currentTodo, err := c.ReadOne(id)
+	if err != nil {
 		return err
 	} else {
+		if currentTodo.StatusData.StatusTxt == "Done" || currentTodo.StatusData.StatusTxt == "Deleted" {
+			return errors.New("cannot update")
+		}
 		todo.ID = uint(id)
 		err := c.Storage.Update(todo)
 		return err

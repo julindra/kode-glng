@@ -108,6 +108,7 @@ func (t TodoApi) ReadOne(c *gin.Context) {
 // @Success 200 {object} models.Todo
 // @Failure 400 {object} models.Error
 // @Failure 404 {object} models.Error
+// @Failure 403 {object} models.Error
 // @Failure 500 {object} models.Error
 // @Router /todos/:id [put]
 func (t TodoApi) Update(c *gin.Context) {
@@ -125,6 +126,8 @@ func (t TodoApi) Update(c *gin.Context) {
 			if err := t.controller.Update(id, todo); err != nil {
 				if err.Error() == "record not found" {
 					helpers.Error(c, 404, "Todo Not Found")
+				} else if err.Error() == "cannot update" {
+					helpers.Error(c, 403, "Cannot Update Done/Deleted Todo")
 				} else {
 					helpers.Error(c, 500, err.Error())
 				}

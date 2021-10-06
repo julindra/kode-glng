@@ -181,6 +181,12 @@ var doc = `{
                             "$ref": "#/definitions/models.Error"
                         }
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    },
                     "404": {
                         "description": "Not Found",
                         "schema": {
